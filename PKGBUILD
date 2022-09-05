@@ -1,21 +1,32 @@
-# Maintainer: Alexandre Demers <alexandre.f.demers@gmail.com>
-# Contributor: Johannes Dewender  arch at JonnyJD dot net
-# Contributor: Ionut Biru <ibiru@archlinux.org>
-# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
-# Contributor: Paul Mattal <paul@archlinux.org>
+#!/bin/bash
 
-_pkgbasename=ffmpeg
-pkgname=("lib32-$_pkgbasename" "lib32-lib$_pkgbasename")
+# Created from the original package Alexandre Demers <alexandre.f.demers@gmail.com>, Johannes Dewender  arch at JonnyJD dot net, Ionut Biru <ibiru@archlinux.org>, Tom Newsom <Jeepster@gmx.co.uk>, Contributor: Paul Mattal <paul@archlinux.org>
+
+# Disable various shellcheck rules that produce false positives in this file.
+# Repository rules should be added to the .shellcheckrc file located in the
+# repository root directory, see https://github.com/koalaman/shellcheck/wiki
+# and https://archiv8.github.io for further information.
+# shellcheck disable=SC2034,SC2154
+# [ToDo]: Add files: User documentation
+# [ToDo]: Add files: Tooling
+# [FixMe]: Namcap warnings and errors
+
+# Maintainer: Ross Clark <https://github.com/Archiv8/lib32-ffmpeg/discussions>
+# Contributor: Ross Clark <https://github.com/Archiv8/lib32-ffmpeg/discussions>
+
+
+_relname=ffmpeg
+pkgname=("lib32-$_relname" "lib32-lib$_relname")
 pkgver=5.0
-pkgrel=2
-epoch=2
+pkgrel=3
+# epoch=2
 pkgdesc="Complete solution to record, convert and stream audio and video (32 bit)"
 arch=('x86_64')
 url="http://ffmpeg.org/"
 license=('GPL3')
   depends=(
-#      "$_pkgbasename"
-      "$_pkgbasename>=${epoch}:${pkgver}"
+#      "$_relname"
+      "$_relname>=${pkgver}"
       'lib32-alsa-lib'
       'lib32-aom'
       'lib32-bzip2'
@@ -97,7 +108,7 @@ b2sums=('SKIP'
         '3f2ee7606500fa9444380d138959cd2bccfbba7d34629a17f4f6288c6bde29e931bbe922a7c25d861f057ddd4ba0b095bbd675c1930754746d5dd476b3ccbc13')
 
 prepare() {
-  cd ${_pkgbasename}
+  cd ${_relname}
 
   # Patching if needed
   git cherry-pick -n 988f2e9eb063db7c1a678729f58aab6eba59a55b # fix nvenc on older gpus
@@ -106,12 +117,12 @@ prepare() {
   }
 
 pkgver() {
-  cd ${_pkgbasename}
+  cd ${_relname}
   git describe --tags | sed 's/^n//'
 }
 
 build() {
-  cd ${_pkgbasename}
+  cd ${_relname}
 
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
@@ -200,7 +211,7 @@ package_lib32-libffmpeg() {
     'lib32-ffmpeg'
   )
 
-  cd ${_pkgbasename}
+  cd ${_relname}
 
   make DESTDIR="${pkgdir}" install
 
@@ -213,7 +224,7 @@ package_lib32-ffmpeg() {
       'lib32-libffmpeg' 
   )
 
-  cd ${_pkgbasename}
+  cd ${_relname}
 
   make DESTDIR="${pkgdir}" install
 
